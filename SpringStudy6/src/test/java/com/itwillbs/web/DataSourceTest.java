@@ -18,6 +18,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 // @RunWith(SpringJUnit4ClassRunner.class)
 // => 스프링을 사용해서 테스트 진행
+//@ContextConfiguration(
+//		locations = {"file:src/main/webapp/WEB-INF/spring/root-context.xml"}
+//		)
+// => 테스트할때 필요한 정보(설정)등을 가져오도록 설정
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
 		locations = {"file:src/main/webapp/WEB-INF/spring/root-context.xml"}
@@ -26,9 +30,9 @@ public class DataSourceTest {
 	
 	// 디비 연결정보(직접 작성x)
 	// 생성된 객체 정보를 가져오기(의존주입)
-	@Inject
-	private DataSource ds;
-//	private DataSource ds = new DataSource();
+		@Inject
+		private DataSource ds;
+		//	private DataSource ds = new DataSource();
 	
 	@Test
 	public void testDataSource() {
