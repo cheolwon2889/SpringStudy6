@@ -1,6 +1,10 @@
 package com.itwillbs.persistence;
 
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -67,5 +71,81 @@ public class MemberDAOImpl implements MemberDAO{
 		System.out.println(" DAO : 회원가입 완료! ");
 	}
 	
+	@Override
+	public MemberVO loginMember(MemberVO vo) {
+		System.out.println(" DAO : loginMember(MemberVO vo) 실행 ");
+		
+		// SQL 구문을 mapper에 생성
+		System.out.println(" DAO : mapper SQL 생성완료. ");
+		// SQL 구문 실행.
+		MemberVO resultVO = sqlSession.selectOne( NAMESPACE+".loginMember", vo);
+		
+		System.out.println(" DAO : "+resultVO);
+		
+		return resultVO;
+	}
 	
+	@Override
+	public MemberVO loginMember(String userid, String userpw) {
+		System.out.println(" DAO : loginMember(String userid, String userpw) 실행");
+		// SQL 구문을 mapper에 생성
+		// SQL 구문 실행.
+		// MemberVO resultVO = sqlSession.selectOne( NAMESPACE+".loginMember", userid, userpw); X
+		// MemberVO vo = new MemberVO();
+		// vo.setUserid(userid);
+		// vo.setUserpw(userpw);
+		//
+		// MemberVO resultVO = sqlSession.selectOne( NAMESPACE+".loginMember", vo);
+		// => 전달 받은 정보를 하나의 공통객체에 저장 => 전달할때 객체로 전달
+		
+		// * userid(회원가입), userpw(게시판)는 하나의 객체(MemberVO)에 
+		//  => 저장이 불가능하다고 가정. Ex) join구문 실행할때
+		Map<String , Object> paramMap = new HashMap<String, Object>();
+		// paramMap.put("mapper에서 호출하는 이름", 전달되는 값);
+		paramMap.put("userid", userid);
+		paramMap.put("userpw", userpw);
+		
+		MemberVO resultVO = sqlSession.selectOne( NAMESPACE+".loginMember", paramMap);
+		System.out.println(" DAO : "+resultVO);
+		
+		return resultVO;
+	}
+	
+	@Override
+//	public MemberVO getMember(MemberVO vo) {
+	public MemberVO getMember(String userid) {
+		System.out.println(" DAO : getMember(String userid) ");
+		
+		// SQL 구문을 mapper에 생성
+		// System.out.println(" DAO : mapper SQL 생성완료. ");
+		// MemberVO resultVO = sqlSession.selectOne(NAMESPACE+".getMember", vo);
+		// System.out.println(" DAO : "+resultVO);
+		
+		// return resultVO;
+		return sqlSession.selectOne(NAMESPACE+".getMember", userid);
+	}
+	
+	@Override
+	public int updateMember(MemberVO uvo) {
+		System.out.println(" DAO : updateMember(MemberVO uvo) ");
+		// mapper - sql 작성
+		// sqlSession - sql 실행 (결과에 따른 정수데이터를 리턴)
+		
+		int result = sqlSession.update(NAMESPACE+".updateMember", uvo);
+		
+		return result;
+	}
+	
+	@Override
+	public Integer deleteMember(MemberVO dvo) {
+		System.out.println(" DAO : deleteMember(MemberVO dvo) ");		
+		return sqlSession.update(NAMESPACE+".deleteMember", dvo);
+	}
+	
+	@Override
+	public List<MemberVO> getMemberList() {
+		System.out.println(" DAO : getMemberList() ");	
+		
+		return sqlSession.selectList(NAMESPACE+".getMemberList");
+	}
 }
