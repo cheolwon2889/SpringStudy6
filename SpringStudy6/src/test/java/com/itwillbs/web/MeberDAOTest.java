@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.itwillbs.domain.MemberVO;
 import com.itwillbs.persistence.MemberDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,6 +27,21 @@ public class MeberDAOTest {
 	@Test
 	public void getTime() {
 		mdao.getTime();
+	}
+	
+	@Test
+	public void 회원가입테스트() {
+		System.out.println(" TEST : 회원가입테스트() 시작");
+		MemberVO vo = new MemberVO();
+		
+		vo.setUserid("admin");
+		vo.setUsername("관리자");
+		vo.setUserpw("1234");
+		vo.setUseremail("itwill@admin.com");
+		
+		mdao.insertMember(vo);
+		
+		System.out.println(" TEST : 회원가입테스트() 끝");
 	}
 	
 }

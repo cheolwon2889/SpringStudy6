@@ -10,4 +10,11 @@
  		select now()
  	</select>
  	
+ 	<!-- 회원가입 -->
+ 	<!-- userid 컬럼명. -->
+ 	<insert id="insertMember" >
+ 		insert into tbl_member (userid,userpw,username,useremail)
+ 		values(#{userid},#{userpw},#{username},#{useremail})
+ 	</insert>
+ 	
  </mapper>
