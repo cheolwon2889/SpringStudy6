@@ -38,6 +38,10 @@
 <%--  	<h2> MemberVo (el 표현식) : ${requestScope} </h2>  --%>
 
 
+<hr>
+<h2>userid : ${param.userid}</h2>
+<h2>userpw : ${param.userpw}</h2>
+
 
 </body>
 </html>
