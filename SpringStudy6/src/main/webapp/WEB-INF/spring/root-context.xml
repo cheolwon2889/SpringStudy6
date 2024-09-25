@@ -77,6 +77,7 @@
 
 	
 	<context:component-scan base-package="com.itwillbs.persistence" />
+	<context:component-scan base-package="com.itwillbs.service" />
 	
 	
 	
