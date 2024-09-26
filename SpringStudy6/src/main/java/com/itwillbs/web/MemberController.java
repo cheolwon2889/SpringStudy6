@@ -1,11 +1,16 @@
 package com.itwillbs.web;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -115,6 +120,146 @@ public class MemberController {
 			 
 		return "redirect:/member/main";
 	}
+	
+	// 메인페이지 - GET
+	@RequestMapping(value = "/main" , method = RequestMethod.GET)
+	public void mainMemberGET() {
+		logger.debug("(●'◡'●) /member/main -> mainMemberGET() 실행 ");
+		logger.debug("(●'◡'●) 연결된 뷰페이지 (views/member/main.jsp)");
+	}
+	
+	// 로그아웃페이지 - GET(정보입력,조회,출력) / POST(처리)
+	@RequestMapping(value = "/logout" , method = RequestMethod.GET)
+	public String logoutMemberGET(HttpSession session) {
+		logger.debug("(●'◡'●) /member/main -> mainMemberGET() 실행 ");
+		logger.debug("(●'◡'●) 연결된 뷰페이지 (views/member/logout.jsp)");
+		session.invalidate();
+		
+		logger.debug("사용자 정보 로그아웃 !");
+		return "redirect:/member/main";
+	}
+	
+	// 회원정보 조회 GET
+	// @RequestMapping(value = "info" , method = RequestMethod.GET)
+	@GetMapping(value = "info")
+	public void infoMemberGET(HttpSession session, Model model) {
+		logger.debug("/member/info -> infoMemberGET() 실행 ");
+		
+		// 아이디 정보가 필요함
+		String id = (String)session.getAttribute("id");
+		logger.debug("(●'◡'●) id : " + id);
+		// 서비스 -> DAO : 특정 아이디를 사용해서 회원의 정보를 조회
+		
+		MemberVO vo = mService.memberInfo(id);
+		logger.debug("(●'◡'●) vo : "+ vo);
+		//model.addAttribute("memberInfo", vo);
+		// 서비스에서 가져온 데이터를 연결된 뷰페이지에 전달해서 출력
+		model.addAttribute("memberVO", mService.memberInfo(id));
+		// => 이름이 없을 경우 첫글자를 소문자로 바꾼 클래스명 이름으로 사용
+		logger.debug("(●'◡'●) 연결된 뷰페이지로 이동");
+		
+	}
+	
+	// 회원정보 수정 GET
+	@GetMapping(value= "/update")
+	public String updateMemberGET(HttpSession session , Model model) {
+		// 아이디 정보가 필요함
+		String id = (String)session.getAttribute("id");
+		logger.debug("(●'◡'●) id : " + id);
+		// 서비스 -> DAO : 특정 아이디를 사용해서 회원의 정보를 조회
+		
+		
+		MemberVO vo = mService.memberInfo(id);
+		logger.debug("(●'◡'●) vo : "+ vo);
+		//model.addAttribute("memberInfo", vo);
+		// 서비스에서 가져온 데이터를 연결된 뷰페이지에 전달해서 출력
+		model.addAttribute( mService.memberInfo(id));
+		// => 이름이 없을 경우 첫글자를 소문자로 바꾼 클래스명 이름으로 사용
+		logger.debug("(●'◡'●) 연결된 뷰페이지로 이동");
+		
+		return "member/update";
+		
+		
+	}
+	
+	// 회원정보 수정 POST
+	@PostMapping(value= "/update")
+	public String updateMemberPOST(MemberVO vo) {
+		
+		logger.debug("(●'◡'●) /member/update -> updateMemberPOST() 실행 ");
+		// 한글처리 인코딩 => web.xml 필터 처리
+		logger.debug("(●'◡'●) 전달받은 정보(파라메터)를 저장 ");
+		
+		// 서비스 -> DAO : 전달받은 정보를 사용해서 정보 수정하는 동작
+		int result = mService.memberUpdate(vo);
+		
+		if(result == 0) {
+			// SQL-update 실행결과가 없음(수정x)
+			return "redirect:/member/update";
+		}
+		// 수정 성공
+		return "redirect:/member/main";
+	}
+	
+		
+	// 회원정보 삭제 GET
+	@GetMapping(value="/delete")
+	public void deteleMemberGET(HttpSession session, Model model) {
+		// 아이디 정보가 필요함
+		String id = (String)session.getAttribute("id");
+		logger.debug("(●'◡'●) id : " + id);
+		// 서비스 -> DAO : 특정 아이디를 사용해서 회원의 정보를 조회
+		
+		
+		MemberVO vo = mService.memberInfo(id);
+		logger.debug("(●'◡'●) vo : "+ vo);
+		//model.addAttribute("memberInfo", vo);
+		// 서비스에서 가져온 데이터를 연결된 뷰페이지에 전달해서 출력
+		model.addAttribute( mService.memberInfo(id));
+		// => 이름이 없을 경우 첫글자를 소문자로 바꾼 클래스명 이름으로 사용
+		logger.debug("(●'◡'●) 연결된 뷰페이지로 이동");
+		
+		
+	}
+	// 회원정보 삭제 DELETE
+	
+	@PostMapping(value = "/delete")
+	public String deteleMemberPOST(MemberVO vo, HttpSession session) {
+		logger.debug("(●'◡'●) MemberVO : " + vo);
+		
+		int result = mService.memberDelete(vo);
+		
+		if(result == 0) {
+			// 입력된 정보가 틀림
+			return "redirect:/member/delete";
+			
+		}
+		
+		// 세션객체 정보를 초기화
+		session.invalidate();
+		
+		return "redirect:/member/main";
+	}
+	
+	// 회원목록 조회 - GET
+	@RequestMapping(value = "/list" , method=RequestMethod.GET)
+	public void listMemberGET(Model model) {
+		
+		logger.debug("(●'◡'●) member/list -> listMemberGET() 실행 ");
+		
+		// 로그인 (세션정보) => 생략 
+		
+		// 서비스 -> DAO : 회원 목록정보를 가져오기
+		List<MemberVO> memberlist = mService.memberList();
+		// 연결된 view페이지로 전달해서 출력
+		// => Model 객체 생성
+		// List 같은 경우는 이름을 지정해주는 것을 권장함.
+		model.addAttribute("memberList" , memberlist);
+		
+		
+		
+	}
+	
 	
 	
 

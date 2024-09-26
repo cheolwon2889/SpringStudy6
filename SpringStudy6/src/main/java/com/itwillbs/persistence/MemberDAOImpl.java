@@ -128,6 +128,7 @@ public class MemberDAOImpl implements MemberDAO{
 	@Override
 	public int updateMember(MemberVO uvo) {
 		System.out.println(" DAO : updateMember(MemberVO uvo) ");
+		System.out.println(uvo + "uvo");
 		// mapper - sql 작성
 		// sqlSession - sql 실행 (결과에 따른 정수데이터를 리턴)
 		

@@ -32,7 +32,7 @@
  	<!-- 회원정보 수정 -->
  	<update id="updateMember" >
  		update tbl_member
- 		set useremail = #{useremail} , updatedate = now()
+ 		set useremail = #{useremail} , updatedate = now(), username= #{username}
  		where userid=#{userid} and userpw=#{userpw} 
  	</update>
  	

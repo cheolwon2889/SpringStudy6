@@ -14,7 +14,10 @@
 	<form method="post" > <!-- action 속성이 없을때 자신주소 호출 -->
 		아이디 : <input type="text" name="userid"> <br> 
 		비밀번호 : <input type="password" name="userpw"> <br>
-		<input type="submit" value="로그인"> 
+		<hr>
+		<input type="submit" value="로그인"> <input type="button" value="회원가입" onclick="location.href='/member/join';">
+		<a href="/member/join">회원가입1</a>
+		<a href="javascript:location.href='/member/join';">회원가입2</a>
 	</form>
 	</fieldset>
 </body>
